@@ -1,4 +1,4 @@
-package com.planning.entity;
+package com.planning.plan.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -14,7 +14,7 @@ public class RegisteredMyPlan {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "myplan_id")
+    @JoinColumn(name = "my_plan_id")
     private MyPlan myPlan;
 
 }

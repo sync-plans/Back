@@ -1,6 +1,6 @@
-package com.planning.repository;
+package com.planning.plan.repository;
 
-import com.planning.entity.MyPlan;
+import com.planning.plan.entity.MyPlan;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package com.planning.dto;
+package com.planning.plan.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

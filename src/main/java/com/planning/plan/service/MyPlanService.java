@@ -1,9 +1,9 @@
-package com.planning.service;
+package com.planning.plan.service;
 
-import com.planning.dto.PlanRequestDto;
-import com.planning.dto.PlanResponseDto;
-import com.planning.entity.MyPlan;
-import com.planning.repository.MyPlanRepository;
+import com.planning.plan.dto.MyPlanRequestDto;
+import com.planning.plan.dto.MyPlanDto;
+import com.planning.plan.entity.MyPlan;
+import com.planning.plan.repository.MyPlanRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,29 +16,29 @@ public class MyPlanService {
 
     private final MyPlanRepository myPlanRepository;
 
-    public List<PlanResponseDto> getPlans() {
+    public List<MyPlanDto> getPlans() {
         return myPlanRepository.findAll()
-                .stream().map(PlanResponseDto::new).toList();
+                .stream().map(MyPlanDto::new).toList();
     }
 
-    public PlanResponseDto createPlan(PlanRequestDto requestDto) {
+    public MyPlanDto createPlan(MyPlanRequestDto requestDto) {
         MyPlan myPlan = new MyPlan(requestDto);
         MyPlan savePlan = myPlanRepository.save(myPlan);
-        return new PlanResponseDto(savePlan);
+        return new MyPlanDto(savePlan);
     }
 
-    public PlanResponseDto getPlan(Long planId) {
+    public MyPlanDto getPlan(Long planId) {
         MyPlan myPlan = findPlan(planId);
-        return new PlanResponseDto(myPlan);
+        return new MyPlanDto(myPlan);
     }
 
     @Transactional
-    public PlanResponseDto updatePlan(Long planId, PlanRequestDto requestDto) {
+    public MyPlanDto updatePlan(Long planId, MyPlanRequestDto requestDto) {
         MyPlan myPlan = findPlan(planId);
         // role 확인 구현
 
         myPlan.update(requestDto);
-        return new PlanResponseDto(myPlan);
+        return new MyPlanDto(myPlan);
     }
 
     public void deletePlan(Long planId) {

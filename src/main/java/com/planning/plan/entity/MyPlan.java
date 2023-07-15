@@ -1,6 +1,6 @@
-package com.planning.entity;
+package com.planning.plan.entity;
 
-import com.planning.dto.PlanRequestDto;
+import com.planning.plan.dto.MyPlanRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +24,7 @@ public class MyPlan extends Timestamped{
     @JoinColumn(name = "user_id")
     private User user;
 
-    public MyPlan(PlanRequestDto requestDto) {
+    public MyPlan(MyPlanRequestDto requestDto) {
         this.priority = requestDto.getPriority();
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
@@ -32,7 +32,7 @@ public class MyPlan extends Timestamped{
     }
 
 
-    public void update(PlanRequestDto requestDto){
+    public void update(MyPlanRequestDto requestDto){
         this.priority = requestDto.getPriority();
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();

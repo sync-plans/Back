@@ -1,9 +1,9 @@
-package com.planning.dto;
+package com.planning.plan.dto;
 
 import lombok.Getter;
 
 @Getter
-public class PlanRequestDto {
+public class MyPlanRequestDto {
     private Integer priority;
     private String title;
     private String content;

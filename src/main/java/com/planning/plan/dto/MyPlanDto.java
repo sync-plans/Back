@@ -1,12 +1,12 @@
-package com.planning.dto;
+package com.planning.plan.dto;
 
-import com.planning.entity.MyPlan;
+import com.planning.plan.entity.MyPlan;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
-public class PlanResponseDto {
+public class MyPlanDto {
     private Long id;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
@@ -14,7 +14,7 @@ public class PlanResponseDto {
     private String title;
     private String content;
 
-    public PlanResponseDto(MyPlan myPlan){
+    public MyPlanDto(MyPlan myPlan){
         this.id = myPlan.getPlanId();
         this.startDate = myPlan.getStartDate();
         this.endDate = myPlan.getEndDate();
