@@ -1,11 +1,13 @@
 package com.planning.plan.service;
 
+import com.planning.plan.dto.ApiResponseDto;
 import com.planning.plan.dto.MyPlanRequestDto;
 import com.planning.plan.dto.MyPlanDto;
 import com.planning.plan.entity.MyPlan;
 import com.planning.plan.repository.MyPlanRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,11 +43,12 @@ public class MyPlanService {
         return new MyPlanDto(myPlan);
     }
 
-    public void deletePlan(Long planId) {
+    public ApiResponseDto deletePlan(Long planId) {
         MyPlan myPlan = findPlan(planId);
         // role 확인 구현
 
         myPlanRepository.delete(myPlan);
+        return new ApiResponseDto(HttpStatus.OK.value(),"일정이 삭제되었습니다.");
     }
 
     private MyPlan findPlan(Long planId) {

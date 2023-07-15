@@ -41,8 +41,7 @@ public class MyPlanController {
 
     @DeleteMapping("/{planId}") // 플랜 삭제
     public ApiResponseDto deletePlan(@PathVariable Long planId){
-        planService.deletePlan(planId);
-        return new ApiResponseDto(HttpStatus.OK.value(),"일정이 삭제되었습니다.");
+        return planService.deletePlan(planId);
     }
 
 }
