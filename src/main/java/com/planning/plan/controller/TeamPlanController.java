@@ -1,11 +1,12 @@
 package com.planning.plan.controller;
 
-import com.planning.plan.dto.CreateTeamPlanDto;
+import com.planning.plan.dto.TeamPlanCreateDto;
 import com.planning.plan.dto.TeamPlanDto;
 import com.planning.plan.service.TeamPlanService;
 import com.planning.user.entity.User;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -16,8 +17,8 @@ public class TeamPlanController {
     @NonNull
     private TeamPlanService teamPlanService;
 
-    @GetMapping("/{teamId}")
-    public TeamPlanDto createTeamPlan(@PathVariable Long teamId, @RequestBody CreateTeamPlanDto requestDto) {
+    @PostMapping("/{teamId}")
+    public ResponseEntity<TeamPlanDto> createTeamPlan(@PathVariable Long teamId, @RequestBody TeamPlanCreateDto requestDto) {
         User user = new User();
         return this.teamPlanService.createTeamPlan(teamId, requestDto, user);
     }
@@ -28,7 +29,7 @@ public class TeamPlanController {
     }
 
     @PutMapping("/{planId}")
-    public TeamPlanDto putTeamPlan(@PathVariable Long planId, @RequestBody CreateTeamPlanDto requestDto) {
+    public TeamPlanDto putTeamPlan(@PathVariable Long planId, @RequestBody TeamPlanCreateDto requestDto) {
         return this.teamPlanService.putTeamPlan(planId, requestDto);
     }
 

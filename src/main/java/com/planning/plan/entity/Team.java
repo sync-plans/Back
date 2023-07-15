@@ -1,17 +1,15 @@
 package com.planning.plan.entity;
 
-import com.planning.plan.dto.CreateTeamPlannerDto;
+import com.planning.plan.dto.TeamPlannerCreateDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@NoArgsConstructor
 @ToString
 @Getter
-@Setter
+@NoArgsConstructor
 public class Team {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +18,7 @@ public class Team {
     @Column(nullable = false)
     private String teamTitle;
 
-    public Team(CreateTeamPlannerDto requestDto) {
+    public Team(TeamPlannerCreateDto requestDto) {
         this.teamTitle = requestDto.getTeamTitle();
     }
 }

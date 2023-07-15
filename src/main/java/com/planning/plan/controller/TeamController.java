@@ -1,6 +1,6 @@
 package com.planning.plan.controller;
 
-import com.planning.plan.dto.CreateTeamPlannerDto;
+import com.planning.plan.dto.TeamPlannerCreateDto;
 import com.planning.plan.dto.TeamPlanDto;
 import com.planning.plan.service.TeamService;
 import com.planning.user.entity.User;
@@ -18,7 +18,7 @@ public class TeamController {
     private TeamService teamService;
 
     @PostMapping("")
-    public String createTeamPlanner(@RequestBody CreateTeamPlannerDto requestDto) {
+    public String createTeamPlanner(@RequestBody TeamPlannerCreateDto requestDto) {
         User user = new User();
         return this.teamService.createTeamPlanner(requestDto, user);
     }

@@ -1,4 +1,4 @@
-package com.planning.entity;
+package com.planning.user.entity;
 
 public enum UserRoleEnum {
     USER(Authority.user),

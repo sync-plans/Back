@@ -1,7 +1,7 @@
 package com.planning.plan.entity;
 
 import com.planning.entity.TimeStamped;
-import com.planning.plan.dto.CreateTeamPlanDto;
+import com.planning.plan.dto.TeamPlanCreateDto;
 import com.planning.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 @Entity
 @ToString
 @Getter
-@Setter
 @NoArgsConstructor
+@Setter
 public class TeamPlan extends TimeStamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,7 +44,15 @@ public class TeamPlan extends TimeStamped {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public void update(CreateTeamPlanDto requestDto) {
+    public TeamPlan(TeamPlanCreateDto requestDto, Team team, User user) {
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
+        this.startDate = requestDto.getStartDate();
+        this.endDate = requestDto.getEndDate();
+        this.priority = requestDto.getPriority();
+    }
+
+    public void update(TeamPlanCreateDto requestDto) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
         this.startDate = requestDto.getStartDate();

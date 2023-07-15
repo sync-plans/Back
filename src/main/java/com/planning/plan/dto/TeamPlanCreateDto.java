@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class CreateTeamPlanDto {
+public class TeamPlanCreateDto {
     private String title;
     private String content;
     private LocalDateTime startDate;

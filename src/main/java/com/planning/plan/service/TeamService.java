@@ -1,6 +1,6 @@
 package com.planning.plan.service;
 
-import com.planning.plan.dto.CreateTeamPlannerDto;
+import com.planning.plan.dto.TeamPlannerCreateDto;
 import com.planning.plan.dto.TeamPlanDto;
 import com.planning.plan.entity.Team;
 import com.planning.plan.entity.TeamUser;
@@ -32,14 +32,9 @@ public class TeamService {
     }
 
     @Transactional
-    public String createTeamPlanner(CreateTeamPlannerDto requestDto, User user) {
-        Team team = new Team(requestDto);
-        Team saveTeam = teamRepository.save(team);
-
-        TeamUser teamUser = new TeamUser();
-        teamUser.setTeam(saveTeam);
-        teamUser.setUser(user);
-        teamUserRepository.save(teamUser);
+    public String createTeamPlanner(TeamPlannerCreateDto requestDto, User user) {
+        Team saveTeam = teamRepository.save(new Team(requestDto));
+        teamUserRepository.save(new TeamUser(saveTeam, user));
         return "success";
     }
 }

@@ -5,6 +5,6 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class CreateTeamPlannerDto {
+public class TeamPlannerCreateDto {
     private String teamTitle;
 }
