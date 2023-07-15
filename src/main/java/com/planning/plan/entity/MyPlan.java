@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Table
@@ -19,6 +21,10 @@ public class MyPlan extends Timestamped{
     private String title;
     @Column(nullable = false)
     private String content;
+    @Column(nullable = false)
+    private LocalDateTime startDate;
+    @Column(nullable = false)
+    private LocalDateTime endDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -28,6 +34,8 @@ public class MyPlan extends Timestamped{
         this.priority = requestDto.getPriority();
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
+        this.startDate = requestDto.getStartDate();
+        this.endDate = requestDto.getEndDate();
 //        this.user = user;
     }
 
@@ -36,5 +44,7 @@ public class MyPlan extends Timestamped{
         this.priority = requestDto.getPriority();
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
+        this.startDate = requestDto.getStartDate();
+        this.endDate = requestDto.getEndDate();
     }
 }
