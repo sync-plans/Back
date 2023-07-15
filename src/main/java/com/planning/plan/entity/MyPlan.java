@@ -1,6 +1,8 @@
 package com.planning.plan.entity;
 
+import com.planning.entity.TimeStamped;
 import com.planning.plan.dto.MyPlanRequestDto;
+import com.planning.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Table
 @NoArgsConstructor
-public class MyPlan extends Timestamped{
+public class MyPlan extends TimeStamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long planId;
