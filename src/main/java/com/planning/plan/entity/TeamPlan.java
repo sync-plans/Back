@@ -50,6 +50,8 @@ public class TeamPlan extends TimeStamped {
         this.startDate = requestDto.getStartDate();
         this.endDate = requestDto.getEndDate();
         this.priority = requestDto.getPriority();
+        this.team = team;
+        this.user = user;
     }
 
     public void update(TeamPlanCreateDto requestDto) {

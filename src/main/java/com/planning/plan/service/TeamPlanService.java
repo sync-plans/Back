@@ -25,9 +25,11 @@ public class TeamPlanService {
     private TeamRepository teamRepository;
     @NonNull
     private TeamUserRepository teamUserRepository;
+    @NonNull
+    private TeamService teamService;
 
     public ResponseEntity<TeamPlanDto> createTeamPlan(Long teamId, TeamPlanCreateDto requestDto, User user) {
-        Team team = teamRepository.findById(teamId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 team 입니다."));
+        Team team = teamService.findTeam(teamId);
         TeamPlan saveTeamPlan = teamPlanRepository.save(new TeamPlan(requestDto, team, user));
         return ResponseEntity.status(HttpStatus.CREATED).body(new TeamPlanDto(saveTeamPlan));
     }
@@ -38,19 +40,25 @@ public class TeamPlanService {
     }
 
     @Transactional
-    public TeamPlanDto putTeamPlan(Long planId, TeamPlanCreateDto requestDto) {
-        TeamPlan teamPlan = findTeamPlan(planId);
+    public TeamPlanDto putTeamPlan(Long planId, TeamPlanCreateDto requestDto, User user) {
+        TeamPlan teamPlan = userValidateReturnTeamPlan(planId, user);
         teamPlan.update(requestDto);
         return new TeamPlanDto(teamPlan);
     }
 
-    public Long deleteTeamPlan(Long planId) {
-        TeamPlan teamPlan = findTeamPlan(planId);
+    public Long deleteTeamPlan(Long planId, User user) {
+        TeamPlan teamPlan = userValidateReturnTeamPlan(planId, user);
         teamPlanRepository.delete(teamPlan);
         return planId;
     }
 
     public TeamPlan findTeamPlan(Long planId) {
         return this.teamPlanRepository.findById(planId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 team plan 입니다."));
+    }
+
+    public TeamPlan userValidateReturnTeamPlan(Long teamPlanId, User user) {
+        TeamPlan teamPlan = this.findTeamPlan(teamPlanId);
+        if (!user.equals(teamPlan.getUser())) throw new IllegalArgumentException("잘못된 User의 접근입니다.");
+        return teamPlan;
     }
 }

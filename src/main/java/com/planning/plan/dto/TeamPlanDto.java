@@ -1,7 +1,7 @@
 package com.planning.plan.dto;
 
 import com.planning.plan.entity.TeamPlan;
-import com.planning.user.entity.User;
+import com.planning.user.dto.UserDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,7 +19,7 @@ public class TeamPlanDto {
     private LocalDateTime endDate;
     private Integer priority;
     private TeamDto teamDto;
-    private User user;
+    private UserDto user;
 
     public TeamPlanDto(TeamPlan teamPlan) {
         this.id = teamPlan.getId();
@@ -29,6 +29,6 @@ public class TeamPlanDto {
         this.endDate = teamPlan.getEndDate();
         this.priority = teamPlan.getPriority();
         this.teamDto = new TeamDto(teamPlan.getTeam());
-        this.user = teamPlan.getUser();
+        this.user = new UserDto(teamPlan.getUser());
     }
 }
