@@ -40,6 +40,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     log.info("case fail");
                     response.setStatus(403);
                     jwtUtil.clearToken(response);
+                    //void 여서 return 없어도 된다. if 다음 동작도 없으므로 마지막
                 }
                 case "pass" -> {
                     log.info("case pass");
