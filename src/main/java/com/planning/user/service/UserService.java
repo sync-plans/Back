@@ -14,16 +14,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     @NonNull
-    private UserRepository userRepsitory;
+    private UserRepository userRepository;
 
     @NonNull
     private PasswordEncoder passwordEncoder;
 
     public User signUpUser(UserSignUpDto requestDto) {
-        Optional<User> byUsername = userRepsitory.findByUsername(requestDto.getUsername());
+        Optional<User> byUsername = userRepository.findByUsername(requestDto.getUsername());
         if (byUsername.isPresent())
             throw new IllegalArgumentException("중복된 이름이 존재합니다.");
         requestDto.setPassword(passwordEncoder.encode(requestDto.getPassword()));
-        return this.userRepsitory.save(new User(requestDto));
+        return this.userRepository.save(new User(requestDto));
     }
 }
