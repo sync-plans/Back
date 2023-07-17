@@ -21,8 +21,8 @@ public class MyPlanController {
     private final MyPlanService planService;
 
     @GetMapping("") // 플랜 전체 조회
-    public List<MyPlanDto> getPlans(){
-        return planService.getPlans();
+    public List<MyPlanDto> getPlans(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return planService.getPlans(userDetails.getUser());
     }
 
     @PostMapping("") // 플랜 등록

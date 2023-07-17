@@ -19,8 +19,8 @@ public class MyPlanService {
 
     private final MyPlanRepository myPlanRepository;
 
-    public List<MyPlanDto> getPlans() {
-        return myPlanRepository.findAll()
+    public List<MyPlanDto> getPlans(User user) {
+        return myPlanRepository.findAllByUser(user)
                 .stream().map(MyPlanDto::new).toList();
     }
 
