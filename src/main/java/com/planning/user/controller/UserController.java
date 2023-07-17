@@ -9,26 +9,28 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class UserController {
     @NonNull
     private UserService userService;
 
-    @PostMapping
-    public User signUpUser(@RequestBody UserSignUpDto requestDto){
-        return this.userService.signUpUser(requestDto);
-    }
+//    @PostMapping
+//    public User signUpUser(@RequestBody UserSignUpDto requestDto){
+//        return this.userService.signUpUser(requestDto);
+//    }
 
-    @GetMapping("/user/login-page")
+    @GetMapping("/login-page")
     public String loginPage() {
         return "login";
     }
 
-    @GetMapping("/user/kakao/callback")
+    @GetMapping("/kakao/callback")
     public String kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         String token = userService.kakaoLogin(code);
         Cookie cookie = new Cookie(JwtUtil.AUTHORIZATION_HEADER, token.substring(7));

@@ -6,6 +6,7 @@ import com.planning.security.JwtAuthorizationFilter;
 import com.planning.jwt.JwtUtil;
 import com.planning.security.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -72,7 +73,9 @@ public class WebSecurityConfig {
 
         http.authorizeHttpRequests((authorizeHttpRequest) ->
                 authorizeHttpRequest
-                        .requestMatchers("/api/user").permitAll()
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers("/api/user/**").permitAll()
+                        .requestMatchers("/").permitAll()
                         .anyRequest().authenticated()
         );
 
