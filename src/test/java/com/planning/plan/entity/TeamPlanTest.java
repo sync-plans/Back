@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Optional;
 
 
@@ -30,7 +32,21 @@ class TeamPlanTest {
         teamPlan.setEndDate(of);
         TeamPlan save = teamPlanRepository.save(teamPlan);
 
-        Optional<TeamPlan> Id = teamPlanRepository.findById(1L);
+        Optional<TeamPlan> Id = teamPlanRepository.findById(save.getId());
+        System.out.println(Id.get().getStartDate());
+    }
+
+    @Test
+    @DisplayName("Datetime 입출력 test2")
+    @Transactional
+    void dateTimeTest2() {
+        TeamPlan teamPlan = new TeamPlan();
+        Instant instant = Instant.ofEpochMilli(86400000);
+        teamPlan.setStartDate(LocalDateTime.ofInstant(instant, ZoneOffset.UTC));
+        teamPlan.setEndDate(LocalDateTime.ofInstant(instant, ZoneOffset.UTC));
+        TeamPlan save = teamPlanRepository.save(teamPlan);
+
+        Optional<TeamPlan> Id = teamPlanRepository.findById(save.getId());
         System.out.println(Id.get().getStartDate());
     }
 }

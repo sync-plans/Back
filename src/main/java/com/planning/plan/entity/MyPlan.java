@@ -32,13 +32,13 @@ public class MyPlan extends TimeStamped {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public MyPlan(MyPlanRequestDto requestDto) {
+    public MyPlan(MyPlanRequestDto requestDto, User user) {
         this.priority = requestDto.getPriority();
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
         this.startDate = requestDto.getStartDate();
         this.endDate = requestDto.getEndDate();
-//        this.user = user;
+        this.user = user;
     }
 
 

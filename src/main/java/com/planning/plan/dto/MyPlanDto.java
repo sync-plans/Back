@@ -8,11 +8,11 @@ import java.time.LocalDateTime;
 @Getter
 public class MyPlanDto {
     private Long id;
+    private String title;
+    private String content;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private Integer priority;
-    private String title;
-    private String content;
 
     public MyPlanDto(MyPlan myPlan){
         this.id = myPlan.getPlanId();
