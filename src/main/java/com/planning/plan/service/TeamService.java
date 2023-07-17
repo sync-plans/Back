@@ -51,7 +51,7 @@ public class TeamService {
         - 초대하려는 user 가 팀에 속하고 권한이 있어야 한다. (권한은 나중에)
         - 초대받는 user 가 이미 같은 팀에 속해 있지 않아야 한다.
         */
-        Optional<User> optionalUser = userRepository.findByEmail(requestDto.getEmail());
+        Optional<User> optionalUser = userRepository.findByUsername(requestDto.getUsername());
         if (optionalUser.isEmpty()) throw new ValidationException("잘못된 정보입니다.");
         User invitedUser = optionalUser.get();
 
