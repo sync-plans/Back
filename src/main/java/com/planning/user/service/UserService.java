@@ -12,6 +12,7 @@ import com.planning.user.repository.UserRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,9 @@ public class UserService {
     private final RestTemplate restTemplate;
     private final JwtUtil jwtUtil;
 
+    @Value("${client-id}")
+    private String clientId;
+
     public User signUpUser(UserSignUpDto requestDto) {
         Optional<User> byUsername = userRepository.findByUsername(requestDto.getUsername());
         if (byUsername.isPresent())
@@ -54,8 +58,10 @@ public class UserService {
         KakaoUserInfoDto kakaoUserInfoDto = getKakaoUserInfo(accessToken);
         // 필요시 회원가입
         User user = registerKakaoUserIfNeeded(kakaoUserInfoDto);
+        System.out.println(user);
         // JWT 토큰 반환
         String createToken = jwtUtil.createToken(user.getUsername(),user.getRole());
+        System.out.println(createToken);
         return createToken;
     }
 
@@ -76,7 +82,7 @@ public class UserService {
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", "{REST-API-KEY}"); //
+        body.add("client_id", clientId);
         body.add("redirect_uri", "http://localhost:8080/api/user/kakao/callback");
         body.add("code", code);
 
