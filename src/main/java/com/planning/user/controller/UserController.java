@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
+@Slf4j(topic = "UserController")
 public class UserController {
     @NonNull
     private UserService userService;
@@ -29,10 +30,9 @@ public class UserController {
     @GetMapping("/kakao/callback")
     public String kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         String token = userService.kakaoLogin(code);
-        Cookie cookie = new Cookie(JwtUtil.AUTHORIZATION_HEADER, token.substring(7));
-        cookie.setPath("/");
-        response.addCookie(cookie);
-        return "redirect:/";
+        jwtUtil.addJwtToCookie(token, response);
+        log.info(response.getHeader(JwtUtil.AUTHORIZATION_HEADER));
+        return "success";
     }
 
 }
