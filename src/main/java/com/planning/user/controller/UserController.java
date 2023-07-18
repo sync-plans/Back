@@ -5,30 +5,26 @@ import com.planning.jwt.JwtUtil;
 import com.planning.user.dto.UserSignUpDto;
 import com.planning.user.entity.User;
 import com.planning.user.service.UserService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class UserController {
     @NonNull
     private UserService userService;
+    @NonNull
+    private JwtUtil jwtUtil;
 
-//    @PostMapping
-//    public User signUpUser(@RequestBody UserSignUpDto requestDto){
-//        return this.userService.signUpUser(requestDto);
-//    }
-
-    @GetMapping("/login-page")
-    public String loginPage() {
-        return "login";
+    @PostMapping
+    public User signUpUser(@RequestBody UserSignUpDto requestDto){
+        return this.userService.signUpUser(requestDto);
     }
+
 
     @GetMapping("/kakao/callback")
     public String kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
