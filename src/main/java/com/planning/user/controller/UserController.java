@@ -6,11 +6,18 @@ import com.planning.user.dto.UserSignUpDto;
 import com.planning.user.entity.User;
 import com.planning.user.entity.UserRoleEnum;
 import com.planning.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/user")
@@ -21,12 +28,14 @@ public class UserController {
     private UserService userService;
     @NonNull
     private JwtUtil jwtUtil;
+    @Value("${client.url}")
+    private String clientUrl;
 
     @PostMapping
     public User signUpUser(@RequestBody UserSignUpDto requestDto) {
         return this.userService.signUpUser(requestDto);
     }
-  
+
     @GetMapping("/create-jwt")
     public String createJwt(HttpServletResponse res) {
         String token = jwtUtil.createToken("choi", UserRoleEnum.USER);
@@ -41,15 +50,20 @@ public class UserController {
     }
 
     @GetMapping("/hi")
-    public String testHi(){
-        return "hi";
+    public String testHi(HttpServletRequest request) {
+        log.info("Test Hi");
+        return "Test Hi";
     }
 
     @GetMapping("/kakao/callback")
-    public String kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+    public ResponseEntity<String> kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+        //동의 취소시 에러 정보담은 쿼리 처리 필요
         String token = userService.kakaoLogin(code);
         jwtUtil.addJwtToCookie(token, response);
         log.info(response.getHeader(JwtUtil.AUTHORIZATION_HEADER));
-        return "success";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(clientUrl));
+        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 }
