@@ -8,9 +8,11 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -22,6 +24,7 @@ import java.util.Base64;
 import java.util.Date;
 
 @Component
+@Slf4j(topic = "JwtUtil")
 public class JwtUtil {
     // Header KEY 값
     public static final String AUTHORIZATION_HEADER = "Authorization";
@@ -53,9 +56,18 @@ public class JwtUtil {
     public void addJwtToCookie(String token, HttpServletResponse res) {
         try {
             token = URLEncoder.encode(token, "utf-8").replaceAll("\\+", "%20");
-            Cookie cookie = new Cookie(AUTHORIZATION_HEADER, token);
-            cookie.setPath("/");
-            res.addCookie(cookie);
+            ResponseCookie cookie = ResponseCookie.from(AUTHORIZATION_HEADER, token)
+                    .path("/")
+                    .httpOnly(true)
+                    .maxAge(TOKEN_TIME / 1000)
+                    .secure(true)
+                    .sameSite("None")
+                    .build();
+            res.setHeader(cookie.getName(), cookie.getValue());
+            //addCookie api 테스트 편의성으로
+            Cookie cookieApi = new Cookie(AUTHORIZATION_HEADER, token);
+            cookieApi.setPath("/");
+            res.addCookie(cookieApi);
         } catch (UnsupportedEncodingException e) {
             logger.error(e.getMessage());
         }
@@ -69,7 +81,7 @@ public class JwtUtil {
         throw new NullPointerException("Not Found Token");
     }
 
-    public String validateToken(String token) {
+    public String validateToken2(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return "success";
@@ -91,9 +103,11 @@ public class JwtUtil {
     }
 
     public String getTokenFromRequest(HttpServletRequest request) {
+        log.info("getTokenFromRequest");
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
+                System.out.println("hello cookie");
                 if (cookie.getName().equals(AUTHORIZATION_HEADER)) {
                     try {
                         return URLDecoder.decode(cookie.getValue(), "UTF-8");
@@ -104,6 +118,22 @@ public class JwtUtil {
             }
         }
         return null;
+    }
+
+    public boolean validateToken1(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            return true;
+        } catch (SecurityException | MalformedJwtException | SignatureException e) {
+            logger.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
+        } catch (ExpiredJwtException e) {
+            logger.error("Expired JWT token, 만료된 JWT token 입니다.");
+        } catch (UnsupportedJwtException e) {
+            logger.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
+        } catch (IllegalArgumentException e) {
+            logger.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
+        }
+        return false;
     }
 
     public void clearToken(HttpServletResponse response) {
