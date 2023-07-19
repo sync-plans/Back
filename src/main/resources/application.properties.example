@@ -1,17 +1,20 @@
-spring.datasource.url=
-spring.datasource.username=
-spring.datasource.password=
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+#spring.datasource.url=
+#spring.datasource.username=
+#spring.datasource.password=
+#spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+#spring.jpa.hibernate.ddl-auto=update
+##spring.jpa.properties.hibernate.show_sql=true
+#spring.jpa.properties.hibernate.format_sql=true
+#spring.jpa.properties.hibernate.use_sql_comments=true
 
-spring.jpa.hibernate.ddl-auto=update
+#jwt.secret.key=
 
-spring.jpa.properties.hibernate.show_sql=false
-spring.jpa.properties.hibernate.format_sql=true
-spring.jpa.properties.hibernate.use_sql_comments=true
-jwt.secret.key=
-client-id=
+#client-id=
+#kakao.callback.route=
+#server.url=
+#client.url=
 
-# 배포할 시 필요
-server.ssl.key-store=
-server.ssl.key-store-password=
-server.ssl.key-store-type=
+# 배포시에만
+#server.ssl.key-store=
+#server.ssl.key-store-password=
+#server.ssl.key-store-type=

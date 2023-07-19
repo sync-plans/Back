@@ -27,7 +27,7 @@ import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
 
-@Slf4j(topic="KAKAO Login")
+@Slf4j(topic = "KAKAO Login")
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -42,6 +42,12 @@ public class UserService {
 
     @Value("${client-id}")
     private String clientId;
+
+    @Value("${kakao.callback.route}")
+    private String callbackRoute;
+
+    @Value("${server.url}")
+    private String serverUrl;
 
     public User signUpUser(UserSignUpDto requestDto) {
         Optional<User> byUsername = userRepository.findByUsername(requestDto.getUsername());
@@ -60,7 +66,7 @@ public class UserService {
         User user = registerKakaoUserIfNeeded(kakaoUserInfoDto);
         System.out.println(user);
         // JWT 토큰 반환
-        String createToken = jwtUtil.createToken(user.getUsername(),user.getRole());
+        String createToken = jwtUtil.createToken(user.getUsername(), user.getRole());
         System.out.println(createToken);
         return createToken;
     }
@@ -83,7 +89,7 @@ public class UserService {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("client_id", clientId);
-        body.add("redirect_uri", "http://localhost:8080/api/user/kakao/callback");
+        body.add("redirect_uri", serverUrl + callbackRoute);
         body.add("code", code);
 
         RequestEntity<MultiValueMap<String, String>> requestEntity = RequestEntity

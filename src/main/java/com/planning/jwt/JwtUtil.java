@@ -22,6 +22,8 @@ import java.net.URLEncoder;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @Slf4j(topic = "JwtUtil")
@@ -57,6 +59,7 @@ public class JwtUtil {
         try {
             token = URLEncoder.encode(token, "utf-8").replaceAll("\\+", "%20");
             ResponseCookie cookie = ResponseCookie.from(AUTHORIZATION_HEADER, token)
+//                    .domain("localhost")
                     .path("/")
                     .httpOnly(true)
                     .maxAge(TOKEN_TIME / 1000)
@@ -64,6 +67,8 @@ public class JwtUtil {
                     .sameSite("None")
                     .build();
             res.setHeader(cookie.getName(), cookie.getValue());
+//            res.addHeader("Set-Cookie", cookie.toString());
+
             //addCookie api 테스트 편의성으로
             Cookie cookieApi = new Cookie(AUTHORIZATION_HEADER, token);
             cookieApi.setPath("/");
@@ -104,19 +109,31 @@ public class JwtUtil {
 
     public String getTokenFromRequest(HttpServletRequest request) {
         log.info("getTokenFromRequest");
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                log.info("cookie hello");
-                if (cookie.getName().equals(AUTHORIZATION_HEADER)) {
-                    try {
-                        return URLDecoder.decode(cookie.getValue(), "UTF-8");
-                    } catch (UnsupportedEncodingException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
+        String token = request.getHeader("authorization");
+        if (token != null) {
+            log.info(token);
+            try {
+//                log.info(URLDecoder.decode(token, "UTF-8"));
+                return URLDecoder.decode(token, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
             }
         }
+
+        //token 잡는거 getHeader 로 하면 PostMan으로는 인가 통과 못해요~
+//        Cookie[] cookies = request.getCookies();
+//        if (cookies != null) {
+//            for (Cookie cookie : cookies) {
+//                log.info("cookie hello");
+//                if (cookie.getName().equals(AUTHORIZATION_HEADER)) {
+//                    try {
+//                        return URLDecoder.decode(cookie.getValue(), "UTF-8");
+//                    } catch (UnsupportedEncodingException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                }
+//            }
+//        }
         return null;
     }
 
