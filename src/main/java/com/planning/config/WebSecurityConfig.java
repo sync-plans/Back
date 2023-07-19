@@ -84,11 +84,12 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/user").permitAll()
                         .requestMatchers("/api/user/test").permitAll()
                         .requestMatchers("/api/user/create-jwt").permitAll()
-                                   
-                        .requestMatchers("/api/user/kakao/callback").permitAll()
+
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers("/api/user/kakao/callback").permitAll()
+                        .requestMatchers("/api/user/login-page").permitAll()
                         .requestMatchers("/").permitAll()
-                                   
+
                         .anyRequest().authenticated()
         );
 

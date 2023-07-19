@@ -9,6 +9,7 @@ spring.jpa.properties.hibernate.show_sql=false
 spring.jpa.properties.hibernate.format_sql=true
 spring.jpa.properties.hibernate.use_sql_comments=true
 jwt.secret.key=
+client-id=
 
 # 배포할 시 필요
 server.ssl.key-store=
