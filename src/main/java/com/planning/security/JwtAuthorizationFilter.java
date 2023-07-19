@@ -32,9 +32,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String tokenValue = jwtUtil.getTokenFromRequest(request);
+        log.info("first : " + tokenValue);
         if (StringUtils.hasText(tokenValue)) {
             // JWT 토큰 substring
             tokenValue = jwtUtil.subStringToken(tokenValue);
+            log.info(tokenValue);
             switch (jwtUtil.validateToken(tokenValue)) {
                 case "fail" -> {
                     log.info("case fail");

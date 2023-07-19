@@ -8,9 +8,11 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -22,6 +24,7 @@ import java.util.Base64;
 import java.util.Date;
 
 @Component
+@Slf4j(topic = "JwtUtil")
 public class JwtUtil {
     // Header KEY 값
     public static final String AUTHORIZATION_HEADER = "Authorization";
@@ -53,9 +56,18 @@ public class JwtUtil {
     public void addJwtToCookie(String token, HttpServletResponse res) {
         try {
             token = URLEncoder.encode(token, "utf-8").replaceAll("\\+", "%20");
-            Cookie cookie = new Cookie(AUTHORIZATION_HEADER, token);
-            cookie.setPath("/");
-            res.addCookie(cookie);
+            ResponseCookie cookie = ResponseCookie.from(AUTHORIZATION_HEADER, token)
+                    .path("/")
+                    .httpOnly(true)
+                    .maxAge(TOKEN_TIME / 1000)
+                    .secure(true)
+                    .sameSite("None")
+                    .build();
+            res.setHeader(cookie.getName(), cookie.getValue());
+            //addCookie api 테스트 편의성으로
+            Cookie cookieApi = new Cookie(AUTHORIZATION_HEADER, token);
+            cookieApi.setPath("/");
+            res.addCookie(cookieApi);
         } catch (UnsupportedEncodingException e) {
             logger.error(e.getMessage());
         }
@@ -91,9 +103,11 @@ public class JwtUtil {
     }
 
     public String getTokenFromRequest(HttpServletRequest request) {
+        log.info("getTokenFromRequest");
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
+                log.info("cookie hello");
                 if (cookie.getName().equals(AUTHORIZATION_HEADER)) {
                     try {
                         return URLDecoder.decode(cookie.getValue(), "UTF-8");
