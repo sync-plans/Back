@@ -81,7 +81,7 @@ public class JwtUtil {
         throw new NullPointerException("Not Found Token");
     }
 
-    public String validateToken2(String token) {
+    public String validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return "success";
@@ -107,7 +107,7 @@ public class JwtUtil {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                System.out.println("hello cookie");
+                log.info("cookie hello");
                 if (cookie.getName().equals(AUTHORIZATION_HEADER)) {
                     try {
                         return URLDecoder.decode(cookie.getValue(), "UTF-8");
@@ -118,22 +118,6 @@ public class JwtUtil {
             }
         }
         return null;
-    }
-
-    public boolean validateToken1(String token) {
-        try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
-        } catch (SecurityException | MalformedJwtException | SignatureException e) {
-            logger.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
-        } catch (ExpiredJwtException e) {
-            logger.error("Expired JWT token, 만료된 JWT token 입니다.");
-        } catch (UnsupportedJwtException e) {
-            logger.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
-        } catch (IllegalArgumentException e) {
-            logger.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
-        }
-        return false;
     }
 
     public void clearToken(HttpServletResponse response) {

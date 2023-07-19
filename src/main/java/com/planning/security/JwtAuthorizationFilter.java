@@ -37,7 +37,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             // JWT 토큰 substring
             tokenValue = jwtUtil.subStringToken(tokenValue);
             log.info(tokenValue);
-            switch (jwtUtil.validateToken2(tokenValue)) {
+            switch (jwtUtil.validateToken(tokenValue)) {
                 case "fail" -> {
                     log.info("case fail");
                     response.setStatus(403);
