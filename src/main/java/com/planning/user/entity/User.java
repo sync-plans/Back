@@ -15,10 +15,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)
@@ -27,6 +27,8 @@ public class User {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
+
+    private Long kakaoId;
 
     public User(UserSignUpDto requestDto) {
         this.email = requestDto.getEmail();
@@ -38,4 +40,18 @@ public class User {
     public boolean equals(User user) {
         return user.getUsername().equals(this.username) && user.getPassword().equals(this.password);
     }
+
+    public User(String email, String username, String password, Long kakaoId, UserRoleEnum role) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.kakaoId = kakaoId;
+        this.role = role;
+    }
+
+    public User kakaoIdUpdate(Long kakaoId) {
+        this.kakaoId = kakaoId;
+        return this;
+    }
+
 }

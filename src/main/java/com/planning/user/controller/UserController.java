@@ -1,24 +1,38 @@
 package com.planning.user.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.planning.jwt.JwtUtil;
 import com.planning.user.dto.UserSignUpDto;
 import com.planning.user.entity.User;
 import com.planning.user.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
+@Slf4j(topic = "UserController")
 public class UserController {
     @NonNull
     private UserService userService;
+    @NonNull
+    private JwtUtil jwtUtil;
 
     @PostMapping
     public User signUpUser(@RequestBody UserSignUpDto requestDto){
         return this.userService.signUpUser(requestDto);
     }
+
+
+    @GetMapping("/kakao/callback")
+    public String kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+        String token = userService.kakaoLogin(code);
+        jwtUtil.addJwtToCookie(token, response);
+        log.info(response.getHeader(JwtUtil.AUTHORIZATION_HEADER));
+        return "success";
+    }
+
 }
