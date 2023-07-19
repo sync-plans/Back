@@ -6,6 +6,7 @@ import com.planning.security.JwtAuthorizationFilter;
 import com.planning.jwt.JwtUtil;
 import com.planning.security.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -83,6 +84,11 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/user").permitAll()
                         .requestMatchers("/api/user/test").permitAll()
                         .requestMatchers("/api/user/create-jwt").permitAll()
+                                   
+                        .requestMatchers("/api/user/kakao/callback").permitAll()
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers("/").permitAll()
+                                   
                         .anyRequest().authenticated()
         );
 
