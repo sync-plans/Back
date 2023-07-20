@@ -18,6 +18,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -145,7 +146,8 @@ public class UserService {
         return new KakaoUserInfoDto(id, nickname, email);
     }
 
-    private User registerKakaoUserIfNeeded(KakaoUserInfoDto kakaoUserInfo) {
+    @Transactional
+    public User registerKakaoUserIfNeeded(KakaoUserInfoDto kakaoUserInfo) {
         // DB에 중복된 KakaoId 있는지 확인
         Long kakaoId = kakaoUserInfo.getId();
         User kakaoUser = userRepository.findByKakaoId(kakaoId).orElse(null);
@@ -158,7 +160,8 @@ public class UserService {
                 kakaoUser = sameEmailUser;
                 // 기존 회원정보에 카카오 Id 추가
                 // 이거 save하면 db insert라 unique 겹쳐서 에러나요!
-                kakaoUser = kakaoUser.kakaoIdUpdate(kakaoId);
+                kakaoUser.kakaoIdUpdate(kakaoId);
+                return kakaoUser;
             } else {
                 // 신규 회원가입
                 // password: random UUID
@@ -169,7 +172,6 @@ public class UserService {
                 String email = kakaoUserInfo.getEmail();
                 kakaoUser = new User(kakaoEmail, kakaoUserInfo.getNickname(), encodedPassword, kakaoId, UserRoleEnum.USER);
             }
-
             userRepository.save(kakaoUser);
         }
         return kakaoUser;
