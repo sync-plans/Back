@@ -86,7 +86,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/user/create-jwt").permitAll()
 
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        .requestMatchers("/api/user/kakao/callback").permitAll()
+                        .requestMatchers("/api/user/kakao/login").permitAll()
                         .requestMatchers("/api/user/login-page").permitAll()
                         .requestMatchers("/").permitAll()
 

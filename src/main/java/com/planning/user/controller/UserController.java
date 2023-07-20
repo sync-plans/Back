@@ -54,16 +54,12 @@ public class UserController {
         log.info("Test Hi");
         return "Test Hi";
     }
-
-    @GetMapping("/kakao/callback")
-    public ResponseEntity<String> kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+    @GetMapping("/kakao/login")
+    public String kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         //동의 취소시 에러 정보담은 쿼리 처리 필요
         String token = userService.kakaoLogin(code);
         jwtUtil.addJwtToCookie(token, response);
         log.info(response.getHeader(JwtUtil.AUTHORIZATION_HEADER));
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(clientUrl));
-        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
+        return "success";
     }
 }
