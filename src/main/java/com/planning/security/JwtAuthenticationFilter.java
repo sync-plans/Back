@@ -3,6 +3,7 @@ package com.planning.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.planning.jwt.JwtUtil;
 import com.planning.user.dto.UserLoginDto;
+import com.planning.user.entity.User;
 import com.planning.user.entity.UserRoleEnum;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -49,10 +50,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
         log.info("로그인 성공 및 JWT 생성");
-        String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
+        User user = ((UserDetailsImpl) authResult.getPrincipal()).getUser();
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
 
-        String token = jwtUtil.createToken(username, role);
+        String token = jwtUtil.createToken(user);
         jwtUtil.addJwtToCookie(token, response);
     }
 

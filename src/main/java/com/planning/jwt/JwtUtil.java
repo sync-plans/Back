@@ -1,5 +1,6 @@
 package com.planning.jwt;
 
+import com.planning.user.entity.User;
 import com.planning.user.entity.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -20,10 +21,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.Key;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @Slf4j(topic = "JwtUtil")
@@ -50,9 +48,14 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
+    public String createToken(User user) {
+        Date date = new Date();
+        return BEARER_PREFIX + Jwts.builder().setClaims(Map.of("userid", user.getId())).setSubject(user.getUsername()).claim(AUTHORIZATION_KEY, user.getRole()).setExpiration(new Date(date.getTime() + TOKEN_TIME)).setIssuedAt(date).signWith(key, signatureAlgorithm).compact();
+    }
+
     public String createToken(String username, UserRoleEnum role) {
         Date date = new Date();
-        return BEARER_PREFIX + Jwts.builder().setSubject(username).claim(AUTHORIZATION_KEY, role).setExpiration(new Date(date.getTime() + TOKEN_TIME)).setIssuedAt(date).signWith(key, signatureAlgorithm).compact();
+        return BEARER_PREFIX + Jwts.builder().setSubject(username).setHeader(Map.of("userid", "test")).setClaims(Map.of("UserId", 0)).claim(AUTHORIZATION_KEY, role).setExpiration(new Date(date.getTime() + TOKEN_TIME)).setIssuedAt(date).signWith(key, signatureAlgorithm).compact();
     }
 
     public void addJwtToCookie(String token, HttpServletResponse res) {

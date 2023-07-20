@@ -18,6 +18,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -46,8 +47,8 @@ public class UserService {
     @Value("${kakao.callback.route}")
     private String callbackRoute;
 
-    @Value("${server.url}")
-    private String serverUrl;
+    @Value("${client.url}")
+    private String clientUrl;
 
     public User signUpUser(UserSignUpDto requestDto) {
         Optional<User> byUsername = userRepository.findByUsername(requestDto.getUsername());
@@ -66,7 +67,7 @@ public class UserService {
         User user = registerKakaoUserIfNeeded(kakaoUserInfoDto);
         System.out.println(user);
         // JWT 토큰 반환
-        String createToken = jwtUtil.createToken(user.getUsername(), user.getRole());
+        String createToken = jwtUtil.createToken(user);
         System.out.println(createToken);
         return createToken;
     }
@@ -89,7 +90,7 @@ public class UserService {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("client_id", clientId);
-        body.add("redirect_uri", serverUrl + callbackRoute);
+        body.add("redirect_uri", clientUrl+callbackRoute);
         body.add("code", code);
 
         RequestEntity<MultiValueMap<String, String>> requestEntity = RequestEntity
@@ -145,7 +146,8 @@ public class UserService {
         return new KakaoUserInfoDto(id, nickname, email);
     }
 
-    private User registerKakaoUserIfNeeded(KakaoUserInfoDto kakaoUserInfo) {
+    @Transactional
+    public User registerKakaoUserIfNeeded(KakaoUserInfoDto kakaoUserInfo) {
         // DB에 중복된 KakaoId 있는지 확인
         Long kakaoId = kakaoUserInfo.getId();
         User kakaoUser = userRepository.findByKakaoId(kakaoId).orElse(null);
@@ -157,7 +159,9 @@ public class UserService {
             if (sameEmailUser != null) {
                 kakaoUser = sameEmailUser;
                 // 기존 회원정보에 카카오 Id 추가
-                kakaoUser = kakaoUser.kakaoIdUpdate(kakaoId);
+                // 이거 save하면 db insert라 unique 겹쳐서 에러나요!
+                kakaoUser.kakaoIdUpdate(kakaoId);
+                return kakaoUser;
             } else {
                 // 신규 회원가입
                 // password: random UUID
@@ -166,10 +170,8 @@ public class UserService {
 
                 // email: kakao email
                 String email = kakaoUserInfo.getEmail();
-
-                kakaoUser = new User(kakaoUserInfo.getNickname(), encodedPassword, email, kakaoId, UserRoleEnum.USER);
+                kakaoUser = new User(kakaoEmail, kakaoUserInfo.getNickname(), encodedPassword, kakaoId, UserRoleEnum.USER);
             }
-
             userRepository.save(kakaoUser);
         }
         return kakaoUser;
